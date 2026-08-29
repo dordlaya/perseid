@@ -1,0 +1,101 @@
+import 'package:flame/game.dart';
+import 'package:flame/components.dart';
+import 'package:flame/events.dart';
+import '../state/app_state.dart';
+import 'components/background_component.dart';
+import 'components/star_component.dart';
+import 'components/probe_component.dart';
+
+class SpaceMapGame extends FlameGame with PanDetector, ScrollDetector {
+  final AppState state;
+  
+  late final BackgroundComponent background;
+  final Map<int, StarComponent> starComponents = {};
+  final Map<int, ProbeComponent> probeComponents = {};
+
+  SpaceMapGame(this.state);
+
+  @override
+  Future<void> onLoad() async {
+    camera = CameraComponent(world: world);
+    camera.viewfinder.zoom = 1.0;
+    
+    background = BackgroundComponent(state);
+    world.add(background);
+    
+    // Add components that exist on load
+    _syncComponents();
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    state.stepDisplay(dt);
+    _syncComponents();
+  }
+
+  void _syncComponents() {
+    // Sync Users
+    final currentUserIds = state.users.map((u) => u.id).toSet();
+    
+    // Remove deleted users
+    starComponents.removeWhere((id, comp) {
+      if (!currentUserIds.contains(id)) {
+        comp.removeFromParent();
+        return true;
+      }
+      return false;
+    });
+
+    // Add new / Update existing
+    for (final user in state.users) {
+      if (starComponents.containsKey(user.id)) {
+        starComponents[user.id]!.user = user;
+      } else {
+        final comp = StarComponent(user, state);
+        starComponents[user.id] = comp;
+        world.add(comp);
+      }
+    }
+
+    // Sync Probes
+    final currentProbeIds = state.probes.map((p) => p.id).toSet();
+    
+    // Remove deleted probes
+    probeComponents.removeWhere((id, comp) {
+      if (!currentProbeIds.contains(id)) {
+        comp.removeFromParent();
+        return true;
+      }
+      return false;
+    });
+
+    // Add new / Update existing
+    for (final probe in state.probes) {
+      if (probeComponents.containsKey(probe.id)) {
+        // Position is handled internally by the component reading from the probe object
+      } else {
+        final comp = ProbeComponent(probe);
+        probeComponents[probe.id] = comp;
+        world.add(comp);
+      }
+    }
+  }
+
+  // --- Camera Controls ---
+  
+  static const double minZoomLimit = 0.05;
+  static const double maxZoomLimit = 2.6;
+
+  @override
+  void onPanUpdate(DragUpdateInfo info) {
+    camera.viewfinder.position -= info.delta.global / camera.viewfinder.zoom;
+  }
+
+  @override
+  void onScroll(PointerScrollInfo info) {
+    final zoomDelta = info.scrollDelta.global.y > 0 ? 1 / 1.12 : 1.12;
+    final newZoom = (camera.viewfinder.zoom * zoomDelta).clamp(minZoomLimit, maxZoomLimit);
+    camera.viewfinder.zoom = newZoom;
+  }
+}

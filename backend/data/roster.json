@@ -1,0 +1,149 @@
+{
+  "rev": 17,
+  "users": [
+    {
+      "id": 1,
+      "name": "dod",
+      "fx": 0.8207130231663105,
+      "fy": 0.6200167894820904,
+      "r": 46,
+      "hits": 56,
+      "createdAt": 1788006525385,
+      "loggedIn": true,
+      "email": "d@d.com",
+      "pw": "pbkdf2_sha256$120000$f10a0182076833eb1b34987ba2196a5f$f255c2bcc961d76d27e72a7afe7348146c2b87da59057a98ba5ab53e8b92d54c"
+    },
+    {
+      "id": 2,
+      "name": "foo",
+      "fx": 0.8890742375529662,
+      "fy": 0.8415854324407788,
+      "r": 25,
+      "hits": 6,
+      "createdAt": 1788008070777,
+      "loggedIn": false,
+      "email": "d@dd.com",
+      "pw": "pbkdf2_sha256$120000$28af491cbcae1bb2ba913adc394ba10e$4d2c494117c0a17203abaceb5b5287b1124359b4e0ff06aedbde7311ad9a063d"
+    },
+    {
+      "id": 3,
+      "name": "dd",
+      "fx": 0.6485493545238884,
+      "fy": 0.796801943575192,
+      "r": 12.5,
+      "hits": 1,
+      "createdAt": 1788008764604,
+      "loggedIn": true,
+      "email": "d@11.com",
+      "pw": "pbkdf2_sha256$120000$6ba25ff20be7ef736fe0483083a9c096$5e890b11b914f9d323103990149618f2bef4b42d35da068ac67fe4590d50f7f6"
+    },
+    {
+      "id": 4,
+      "name": "dd1",
+      "fx": 0.7442218485725777,
+      "fy": 0.6565714896680175,
+      "r": 10,
+      "hits": 0,
+      "createdAt": 1788008837228,
+      "loggedIn": true,
+      "email": "d@111.com",
+      "pw": "pbkdf2_sha256$120000$d2ff3cb50a3d2c36006596e3f4b2a987$90a13d551fdb08263460a1a4551f3e797670d4b3c247725e096df188b5d89d6e"
+    },
+    {
+      "id": 5,
+      "name": "dd11",
+      "fx": 0.5927001351280049,
+      "fy": 0.9847632052620983,
+      "r": 31.8434620171638,
+      "hits": 18,
+      "createdAt": 1788008843783,
+      "loggedIn": true,
+      "email": "d@1111.com",
+      "pw": "pbkdf2_sha256$120000$3831f29f6f7e08b84e149ef27a32113b$d891ed8127282f786bcdec7970ae4f8af5ffc9183bfd8e097cadcfef4eee997d"
+    },
+    {
+      "id": 6,
+      "name": "dd112",
+      "fx": 0.48953235630719527,
+      "fy": 0.8899718828765253,
+      "r": 15,
+      "hits": 2,
+      "createdAt": 1788008849953,
+      "loggedIn": true,
+      "email": "d2@1111.com",
+      "pw": "pbkdf2_sha256$120000$8e911123b411a5d1e73b9005601674f7$4b7412b3ec58d2afb1428bec2aa67a815b33c8cbf059e7f10b54fdeee63c73ef"
+    },
+    {
+      "id": 7,
+      "name": "dd2112",
+      "fx": 0.45382594166011114,
+      "fy": 0.613368884491995,
+      "r": 12.5,
+      "hits": 1,
+      "createdAt": 1788008858422,
+      "loggedIn": true,
+      "email": "d22@1111.com",
+      "pw": "pbkdf2_sha256$120000$2c55f0f9e79624b4dad6b80729c51e1a$5bab9ea2557b087699cd43e5e5f4f5f8abdc059e2166ec377d69f2b9d89bbd31"
+    },
+    {
+      "id": 8,
+      "name": "dd22112",
+      "fx": 0.35440186243857685,
+      "fy": 0.36142110497795144,
+      "r": 12.5,
+      "hits": 1,
+      "createdAt": 1788008867980,
+      "loggedIn": true,
+      "email": "d222@2.com",
+      "pw": "pbkdf2_sha256$120000$5caab9c1b0c16ee981ff8778335fcb5a$370d3d3c7cc4d09d5678648303470196ac7be614d10657653194ce3baede657b"
+    },
+    {
+      "id": 9,
+      "name": "dd221122",
+      "fx": 0.35649717873340725,
+      "fy": 0.4504811353866164,
+      "r": 12.5,
+      "hits": 1,
+      "createdAt": 1788008873402,
+      "loggedIn": true,
+      "email": "d2222@2.com",
+      "pw": "pbkdf2_sha256$120000$adba08bb669b794824cf502811c2f154$7ee3741aadd8ddc26d02d7e5f81b6d250bb8b33d85685222fca06fe4a9d3bacc"
+    },
+    {
+      "id": 10,
+      "name": "dd2211222",
+      "fx": 0.8724495078439608,
+      "fy": 0.23626543587354076,
+      "r": 20,
+      "hits": 4,
+      "createdAt": 1788008881935,
+      "loggedIn": true,
+      "email": "d2222@22.com",
+      "pw": "pbkdf2_sha256$120000$c807c094eca702a287cd8a041fb073cf$045804b461875440ff197a03711f85dfd7bbe5b346c7fff005ad20d87c2a9c54"
+    },
+    {
+      "id": 11,
+      "name": "dd22211222",
+      "fx": 0.8896176594646771,
+      "fy": 0.09229315798407123,
+      "r": 46,
+      "hits": 15,
+      "createdAt": 1788008889559,
+      "loggedIn": true,
+      "email": "d22222@22.com",
+      "pw": "pbkdf2_sha256$120000$2049f7869ca16c600bddb79ef841249a$c7ea0ce27db604909c030ef82959584b3a22e2d5c97712fad171e516fc195f33"
+    },
+    {
+      "id": 12,
+      "name": "ff",
+      "fx": 0.21012634198573077,
+      "fy": 0.542092929006358,
+      "r": 12.5,
+      "hits": 1,
+      "createdAt": 1788008989441,
+      "loggedIn": true,
+      "email": "ff@ff.com",
+      "pw": "pbkdf2_sha256$120000$ff6e7be3eef2aefae49be72aedde373c$d5e07593fcfdee97fa47f14f876913cf659be2dbb6545f8ca9d1797813a33291"
+    }
+  ]
+}
