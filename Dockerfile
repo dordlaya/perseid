@@ -1,51 +1,29 @@
-# ── Stage 1: Build Flutter Web ────────────────────────────────────────────────
-FROM debian:bookworm-slim AS flutter-builder
+# Flutter web is built locally (`flutter build web --release`)
+# and the output is committed to backend/static/.
+# Render's build network blocks storage.googleapis.com so Flutter
+# cannot be built inside Docker on Render.
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-      git curl unzip xz-utils ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
-
-# Clone Flutter SDK from GitHub (avoids storage.googleapis.com 403 on Render)
-RUN git clone --depth 1 --branch stable \
-      https://github.com/flutter/flutter.git /opt/flutter
-ENV PATH="/opt/flutter/bin:${PATH}"
-
-# Pre-download only the web engine artifacts
-RUN flutter precache --web
-
-# Disable analytics
-RUN flutter config --no-analytics
-
-WORKDIR /app/frontend
-COPY frontend/pubspec.yaml frontend/pubspec.lock ./
-RUN flutter pub get
-COPY frontend/ .
-RUN flutter build web --release
-
-# ── Stage 2: Build Go binary ───────────────────────────────────────────────────
+# ── Stage 1: Build Go binary ───────────────────────────────────────────────────
 FROM golang:1.22-alpine AS go-builder
-WORKDIR /app/backend
-# Download deps first (cached layer)
+WORKDIR /app
 COPY backend/go.mod backend/go.sum ./
 RUN go mod download
-# Then copy source and build
 COPY backend/ .
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o server .
 
-# ── Stage 3: Final runtime image ───────────────────────────────────────────────
+# ── Stage 2: Final runtime image ───────────────────────────────────────────────
 FROM alpine:3.20
 RUN apk --no-cache add ca-certificates tzdata
 WORKDIR /app
 
-# Copy Go binary
-COPY --from=go-builder /app/backend/server ./server
+# Go binary
+COPY --from=go-builder /app/server ./server
 
-# Copy Flutter web output → served as static files
-COPY --from=flutter-builder /app/frontend/build/web ./static
+# Pre-built Flutter web (committed to repo under backend/static/)
+COPY backend/static ./static
 
 ENV RENDER=true
 ENV STATIC_DIR=./static
 
 EXPOSE 10000
-
 CMD ["./server"]
