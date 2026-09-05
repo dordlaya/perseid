@@ -2,19 +2,19 @@
 FROM debian:bookworm-slim AS flutter-builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      curl git unzip xz-utils ca-certificates \
+      git curl unzip xz-utils ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Flutter
-ENV FLUTTER_VERSION=3.24.5
-RUN curl -fsSL "https://storage.googleapis.com/flutter/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz" \
-      -o /tmp/flutter.tar.xz \
-    && tar -xf /tmp/flutter.tar.xz -C /opt \
-    && rm /tmp/flutter.tar.xz
+# Clone Flutter SDK from GitHub (avoids storage.googleapis.com 403 on Render)
+RUN git clone --depth 1 --branch stable \
+      https://github.com/flutter/flutter.git /opt/flutter
 ENV PATH="/opt/flutter/bin:${PATH}"
 
-# Disable analytics & telemetry
-RUN flutter config --no-analytics && dart --disable-analytics
+# Pre-download only the web engine artifacts
+RUN flutter precache --web
+
+# Disable analytics
+RUN flutter config --no-analytics
 
 WORKDIR /app/frontend
 COPY frontend/pubspec.yaml frontend/pubspec.lock ./
