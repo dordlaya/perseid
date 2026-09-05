@@ -1,0 +1,38 @@
+# ── Stage 1: Build Flutter Web ────────────────────────────────────────────────
+FROM ghcr.io/cirruslabs/flutter:3.24.5 AS flutter-builder
+WORKDIR /app/frontend
+COPY frontend/pubspec.yaml frontend/pubspec.lock ./
+RUN flutter pub get
+COPY frontend/ .
+RUN flutter build web --release
+
+# ── Stage 2: Build Go binary ───────────────────────────────────────────────────
+FROM golang:1.22-alpine AS go-builder
+WORKDIR /app/backend
+# Download deps first (cached layer)
+COPY backend/go.mod backend/go.sum ./
+RUN go mod download
+# Then copy source and build
+COPY backend/ .
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o server .
+
+# ── Stage 3: Final runtime image ───────────────────────────────────────────────
+FROM alpine:3.20
+RUN apk --no-cache add ca-certificates tzdata
+WORKDIR /app
+
+# Copy Go binary
+COPY --from=go-builder /app/backend/server ./server
+
+# Copy Flutter web output → served as static files
+COPY --from=flutter-builder /app/frontend/build/web ./static
+
+# Copy default roster data
+COPY backend/data ./data
+
+ENV RENDER=true
+ENV STATIC_DIR=./static
+
+EXPOSE 10000
+
+CMD ["./server"]

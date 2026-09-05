@@ -1,37 +1,14 @@
 services:
   - type: web
     name: perseid
-    runtime: go
+    env: docker
+    dockerfilePath: ./Dockerfile
     plan: free
-    buildCommand: |
-      # ── Install Flutter ──────────────────────────────────────────────────────
-      FLUTTER_VERSION=3.24.5
-      FLUTTER_ARCHIVE=flutter_linux_${FLUTTER_VERSION}-stable.tar.xz
-      curl -fsSL "https://storage.googleapis.com/flutter/releases/stable/linux/${FLUTTER_ARCHIVE}" \
-        -o /tmp/flutter.tar.xz
-      tar -xf /tmp/flutter.tar.xz -C /opt
-      export PATH="$PATH:/opt/flutter/bin"
-      flutter --version
-
-      # ── Build Flutter Web ────────────────────────────────────────────────────
-      (cd frontend && flutter pub get && flutter build web --release)
-
-      # ── Copy Flutter output into backend/static ──────────────────────────────
-      mkdir -p backend/static
-      cp -r frontend/build/web/. backend/static/
-
-      # ── Build Go binary ──────────────────────────────────────────────────────
-      (cd backend && go build -o server .)
-    startCommand: backend/server
     envVars:
-      - key: RENDER
-        value: "true"
       - key: STORE_BACKEND
         value: valkey
       - key: VALKEY_URL
         sync: false          # set manually in Render dashboard
       - key: VALKEY_PREFIX
         value: spacemap
-      - key: STATIC_DIR
-        value: ./backend/static
     healthCheckPath: /api/health
