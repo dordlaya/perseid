@@ -14,8 +14,18 @@ ENV PATH="${PATH}:${FLUTTER_HOME}/bin"
 RUN git clone --depth 1 --branch stable \
       https://github.com/flutter/flutter.git ${FLUTTER_HOME}
 
-# Opt out of analytics, then let flutter build web fetch only what it needs
+# Opt out of analytics
 RUN flutter config --no-analytics
+
+# Render's Docker runs in a rootless user namespace — tar fails to change
+# ownership for uids/gids that don't exist in the namespace.
+# Wrap tar to always pass --no-same-owner to suppress the chown calls.
+RUN printf '#!/bin/sh\nexec /usr/bin/tar --no-same-owner "$@"\n' \
+      > /usr/local/bin/tar && chmod +x /usr/local/bin/tar
+
+# Pre-fetch only the web engine artifacts (prevents Gradle/Android downloads)
+RUN flutter precache --web --no-android --no-ios \
+      --no-linux --no-macos --no-windows --no-fuchsia
 
 WORKDIR /app/frontend
 COPY frontend/pubspec.yaml frontend/pubspec.lock ./
