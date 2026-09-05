@@ -3,7 +3,6 @@ services:
     name: perseid
     runtime: go
     plan: free
-    rootDir: backend
     buildCommand: |
       # ── Install Flutter ──────────────────────────────────────────────────────
       FLUTTER_VERSION=3.24.5
@@ -15,19 +14,15 @@ services:
       flutter --version
 
       # ── Build Flutter Web ────────────────────────────────────────────────────
-      cd ../frontend
-      flutter pub get
-      flutter build web --release
-      cd ..
+      (cd frontend && flutter pub get && flutter build web --release)
 
       # ── Copy Flutter output into backend/static ──────────────────────────────
       mkdir -p backend/static
       cp -r frontend/build/web/. backend/static/
 
       # ── Build Go binary ──────────────────────────────────────────────────────
-      cd backend
-      go build -o server .
-    startCommand: ./server
+      (cd backend && go build -o server .)
+    startCommand: backend/server
     envVars:
       - key: RENDER
         value: "true"
@@ -38,5 +33,5 @@ services:
       - key: VALKEY_PREFIX
         value: spacemap
       - key: STATIC_DIR
-        value: ./static
+        value: ./backend/static
     healthCheckPath: /api/health
