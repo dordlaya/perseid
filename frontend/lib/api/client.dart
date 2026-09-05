@@ -5,8 +5,18 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import '../models/models.dart';
 
 class ApiClient {
-  static const String baseUrl = 'http://localhost:5173/api';
-  static const String wsUrl = 'ws://localhost:5173/ws';
+  // Derive URLs from the page origin so this works on any host
+  // (localhost in dev, the Render service URL in production).
+  static String get baseUrl {
+    final origin = Uri.base;
+    return '${origin.scheme}://${origin.host}:${origin.port}/api';
+  }
+
+  static String get wsUrl {
+    final origin = Uri.base;
+    final wsScheme = origin.scheme == 'https' ? 'wss' : 'ws';
+    return '$wsScheme://${origin.host}:${origin.port}/ws';
+  }
 
   WebSocketChannel? _channel;
   StreamSubscription? _subscription;
