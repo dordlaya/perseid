@@ -27,9 +27,6 @@ COPY --from=go-builder /app/backend/server ./server
 # Copy Flutter web output → served as static files
 COPY --from=flutter-builder /app/frontend/build/web ./static
 
-# Copy default roster data
-COPY backend/data ./data
-
 ENV RENDER=true
 ENV STATIC_DIR=./static
 
