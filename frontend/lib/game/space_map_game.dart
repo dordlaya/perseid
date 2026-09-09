@@ -6,7 +6,7 @@ import 'components/background_component.dart';
 import 'components/star_component.dart';
 import 'components/probe_component.dart';
 
-class SpaceMapGame extends FlameGame with PanDetector, ScrollDetector {
+class SpaceMapGame extends FlameGame with ScaleDetector, ScrollDetector {
   final AppState state;
   
   late final BackgroundComponent background;
@@ -86,10 +86,24 @@ class SpaceMapGame extends FlameGame with PanDetector, ScrollDetector {
   
   static const double minZoomLimit = 0.05;
   static const double maxZoomLimit = 2.6;
+  
+  late double _startZoom;
 
   @override
-  void onPanUpdate(DragUpdateInfo info) {
+  void onScaleStart(ScaleStartInfo info) {
+    _startZoom = camera.viewfinder.zoom;
+  }
+
+  @override
+  void onScaleUpdate(ScaleUpdateInfo info) {
+    // Panning
     camera.viewfinder.position -= info.delta.global / camera.viewfinder.zoom;
+    
+    // Pinch to zoom
+    if (info.pointerCount >= 2) {
+      final newZoom = (_startZoom * info.raw.scale).clamp(minZoomLimit, maxZoomLimit);
+      camera.viewfinder.zoom = newZoom;
+    }
   }
 
   @override
