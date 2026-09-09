@@ -197,9 +197,10 @@ class SessionBarOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
     if (state.sessionUserId == null) return const SizedBox.shrink();
+    final isMobile = MediaQuery.of(context).size.width < 600;
 
     return Positioned(
-      top: 14,
+      top: isMobile ? 120 : 14,
       left: 0,
       right: 0,
       child: Center(
@@ -257,14 +258,15 @@ class _LeaderboardOverlayState extends State<LeaderboardOverlay> {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
+    final isMobile = MediaQuery.of(context).size.width < 600;
     
     final sortedUsers = List.of(state.users)..sort((a, b) => b.r.compareTo(a.r));
     final top10 = sortedUsers.take(10).toList();
 
     return Positioned(
-      top: 56,
+      top: isMobile ? 16 : 56,
       right: 16,
-      width: 240,
+      width: isMobile ? 160 : 240,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: BackdropFilter(
@@ -347,11 +349,13 @@ class StarInfoOverlay extends StatelessWidget {
     
     final statusColor = jammed ? spaceDanger : (u.loggedIn ? spaceOnline : spaceOffline);
     final statusText = (u.loggedIn ? 'online' : 'offline') + (jammed ? ' · jammed' : '');
+    final isMobile = MediaQuery.of(context).size.width < 600;
     
     return Positioned(
+      left: isMobile ? 76 : null,
       right: 16,
       bottom: 16,
-      width: 240,
+      width: isMobile ? null : 240,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: BackdropFilter(
@@ -597,11 +601,13 @@ class _SearchOverlayState extends State<SearchOverlay> {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
+    final isMobile = MediaQuery.of(context).size.width < 600;
     
     return Positioned(
-      top: 60,
-      left: 244,
-      width: 360,
+      top: isMobile ? (state.sessionUserId != null ? 180 : 130) : 60,
+      left: isMobile ? 16 : 244,
+      right: isMobile ? 16 : null,
+      width: isMobile ? null : 360,
       child: Column(
         children: [
           ClipRRect(
