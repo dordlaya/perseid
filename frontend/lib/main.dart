@@ -67,7 +67,7 @@ class _GameScreenState extends State<GameScreen> {
           GameWidget<SpaceMapGame>(game: _game!),
 
           // UI Overlays
-          HudOverlay(),
+          HudOverlay(game: _game),
           SessionBarOverlay(),
           LeaderboardOverlay(game: _game),
           SearchOverlay(game: _game),
