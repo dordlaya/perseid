@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flame/game.dart';
+
 import 'state/app_state.dart';
 import 'game/space_map_game.dart';
 import 'ui/overlays.dart';
@@ -20,14 +21,16 @@ class SpaceMapApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Space Map',
+      title: 'Perseids',
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: const Color(0xFF03050A),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF9FE7FF),
             foregroundColor: const Color(0xFF050C1A),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
         ),
       ),
@@ -61,10 +64,8 @@ class _GameScreenState extends State<GameScreen> {
       body: Stack(
         children: [
           // Flame Game Layer
-          GameWidget<SpaceMapGame>(
-            game: _game!,
-          ),
-          
+          GameWidget<SpaceMapGame>(game: _game!),
+
           // UI Overlays
           HudOverlay(),
           SessionBarOverlay(),
@@ -72,7 +73,7 @@ class _GameScreenState extends State<GameScreen> {
           SearchOverlay(game: _game),
           StarInfoOverlay(),
           ControlsOverlay(game: _game),
-          
+
           // Add button
           Positioned(
             top: 16,

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../state/app_state.dart';
 import '../game/space_map_game.dart';
 import '../models/models.dart';
+
 import 'package:flame/components.dart';
+
 import 'helpers.dart';
+
 import 'dart:ui';
 import 'dart:math';
 
@@ -24,7 +28,9 @@ BoxDecoration _glassDecoration([double radius = 12.0]) {
     color: spaceBg,
     borderRadius: BorderRadius.circular(radius),
     border: Border.all(color: spaceBorder),
-    boxShadow: const [BoxShadow(color: Color(0x33000000), blurRadius: 10, offset: Offset(0, 4))],
+    boxShadow: const [
+      BoxShadow(color: Color(0x33000000), blurRadius: 10, offset: Offset(0, 4)),
+    ],
   );
 }
 
@@ -48,7 +54,10 @@ class _LoginOverlayState extends State<LoginOverlay> {
   void submit(AppState state) async {
     setState(() => error = null);
     if (isLoginMode) {
-      final res = await state.api.login(identifierController.text, passwordController.text);
+      final res = await state.api.login(
+        identifierController.text,
+        passwordController.text,
+      );
       if (res['ok'] == true) {
         state.setSession(res['id'], res['name']);
         state.showLoginModal = false;
@@ -57,7 +66,11 @@ class _LoginOverlayState extends State<LoginOverlay> {
         setState(() => error = res['error']);
       }
     } else {
-      final res = await state.api.register(nameController.text, emailController.text, passwordController.text);
+      final res = await state.api.register(
+        nameController.text,
+        emailController.text,
+        passwordController.text,
+      );
       if (res['ok'] == true) {
         state.setSession(res['id'], res['name']);
         state.showLoginModal = false;
@@ -85,22 +98,53 @@ class _LoginOverlayState extends State<LoginOverlay> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('SPACE MAP', style: TextStyle(color: spaceTextPrimary, fontSize: 22, letterSpacing: 4, fontWeight: FontWeight.w300)),
+                const Text(
+                  'PERSEIDS',
+                  style: TextStyle(
+                    color: spaceTextPrimary,
+                    fontSize: 22,
+                    letterSpacing: 4,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
                 const SizedBox(height: 10),
-                const Text('Join the cosmos', style: TextStyle(color: spaceTextSecondary, fontSize: 13)),
+                const Text(
+                  'Join the cosmos',
+                  style: TextStyle(color: spaceTextSecondary, fontSize: 13),
+                ),
                 const SizedBox(height: 24),
                 Row(
                   children: [
-                    Expanded(child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: isLoginMode ? spaceAccent : Colors.transparent, foregroundColor: isLoginMode ? const Color(0xFF050C1A) : spaceTextSecondary, elevation: 0),
-                      onPressed: () => setState(() => isLoginMode = true),
-                      child: const Text('Log In')
-                    )),
-                    Expanded(child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: !isLoginMode ? spaceAccent : Colors.transparent, foregroundColor: !isLoginMode ? const Color(0xFF050C1A) : spaceTextSecondary, elevation: 0),
-                      onPressed: () => setState(() => isLoginMode = false),
-                      child: const Text('Register')
-                    )),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isLoginMode
+                              ? spaceAccent
+                              : Colors.transparent,
+                          foregroundColor: isLoginMode
+                              ? const Color(0xFF050C1A)
+                              : spaceTextSecondary,
+                          elevation: 0,
+                        ),
+                        onPressed: () => setState(() => isLoginMode = true),
+                        child: const Text('Log In'),
+                      ),
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: !isLoginMode
+                              ? spaceAccent
+                              : Colors.transparent,
+                          foregroundColor: !isLoginMode
+                              ? const Color(0xFF050C1A)
+                              : spaceTextSecondary,
+                          elevation: 0,
+                        ),
+                        onPressed: () => setState(() => isLoginMode = false),
+                        child: const Text('Register'),
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -116,18 +160,27 @@ class _LoginOverlayState extends State<LoginOverlay> {
                   _input(passwordController, 'Password', obscure: true),
                 ],
                 const SizedBox(height: 24),
-                if (error != null) Text(error!, style: const TextStyle(color: spaceDanger)),
+                if (error != null)
+                  Text(error!, style: const TextStyle(color: spaceDanger)),
                 const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () => submit(state),
-                  style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(44)),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(44),
+                  ),
                   child: Text(isLoginMode ? 'Log In' : 'Register'),
                 ),
                 const SizedBox(height: 8),
-                TextButton(onPressed: () {
-                  state.showLoginModal = false;
-                  state.notifyListeners();
-                }, child: const Text('Cancel', style: TextStyle(color: spaceTextSecondary))),
+                TextButton(
+                  onPressed: () {
+                    state.showLoginModal = false;
+                    state.notifyListeners();
+                  },
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: spaceTextSecondary),
+                  ),
+                ),
               ],
             ),
           ),
@@ -136,7 +189,11 @@ class _LoginOverlayState extends State<LoginOverlay> {
     );
   }
 
-  Widget _input(TextEditingController controller, String hint, {bool obscure = false}) {
+  Widget _input(
+    TextEditingController controller,
+    String hint, {
+    bool obscure = false,
+  }) {
     return TextField(
       controller: controller,
       obscureText: obscure,
@@ -144,8 +201,12 @@ class _LoginOverlayState extends State<LoginOverlay> {
       decoration: InputDecoration(
         labelText: hint,
         labelStyle: const TextStyle(color: spaceTextSecondary),
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: spaceTextSecondary.withOpacity(0.5))),
-        focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: spaceAccent)),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: spaceTextSecondary.withOpacity(0.5)),
+        ),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: spaceAccent),
+        ),
       ),
     );
   }
@@ -172,13 +233,35 @@ class HudOverlay extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('SPACE MAP · LIVE', style: TextStyle(color: spaceTextSecondary, fontSize: 11, letterSpacing: 2.2)),
+                const Text(
+                  'SPACE MAP · LIVE',
+                  style: TextStyle(
+                    color: spaceTextSecondary,
+                    fontSize: 11,
+                    letterSpacing: 2.2,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Text('Probes: ${state.probes.length} / ${state.maxProbes}', style: const TextStyle(color: spaceAccent)),
-                Text('Users: ${state.users.where((u) => u.loggedIn).length} / ${state.users.length}', style: const TextStyle(color: spaceAccent)),
-                Text('Collisions: ${state.collisions}', style: const TextStyle(color: spaceAccent)),
+                Text(
+                  'Probes: ${state.probes.length} / ${state.maxProbes}',
+                  style: const TextStyle(color: spaceAccent),
+                ),
+                Text(
+                  'Users: ${state.users.where((u) => u.loggedIn).length} / ${state.users.length}',
+                  style: const TextStyle(color: spaceAccent),
+                ),
+                Text(
+                  'Collisions: ${state.collisions}',
+                  style: const TextStyle(color: spaceAccent),
+                ),
                 const SizedBox(height: 2),
-                Text(state.isConnected ? 'live' : 'reconnecting...', style: TextStyle(color: state.isConnected ? spaceOnline : spaceDanger, fontSize: 11)),
+                Text(
+                  state.isConnected ? 'live' : 'reconnecting...',
+                  style: TextStyle(
+                    color: state.isConnected ? spaceOnline : spaceDanger,
+                    fontSize: 11,
+                  ),
+                ),
               ],
             ),
           ),
@@ -214,11 +297,17 @@ class SessionBarOverlay extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Signed in as ${state.sessionUserName}', style: const TextStyle(color: spaceAccent)),
+                  Text(
+                    'Signed in as ${state.sessionUserName}',
+                    style: const TextStyle(color: spaceAccent),
+                  ),
                   const SizedBox(width: 12),
                   InkWell(
                     onTap: () => state.clearSession(),
-                    child: const Text('Log Out', style: TextStyle(color: spaceTextSecondary, fontSize: 12)),
+                    child: const Text(
+                      'Log Out',
+                      style: TextStyle(color: spaceTextSecondary, fontSize: 12),
+                    ),
                   ),
                 ],
               ),
@@ -259,8 +348,9 @@ class _LeaderboardOverlayState extends State<LeaderboardOverlay> {
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
     final isMobile = MediaQuery.of(context).size.width < 600;
-    
-    final sortedUsers = List.of(state.users)..sort((a, b) => b.r.compareTo(a.r));
+
+    final sortedUsers = List.of(state.users)
+      ..sort((a, b) => b.r.compareTo(a.r));
     final top10 = sortedUsers.take(10).toList();
 
     return Positioned(
@@ -282,8 +372,21 @@ class _LeaderboardOverlayState extends State<LeaderboardOverlay> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('🏆 Leaderboard', style: TextStyle(color: spaceTextPrimary, fontSize: 13, fontWeight: FontWeight.w500)),
-                        Icon(expanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_left, color: spaceTextSecondary, size: 16),
+                        const Text(
+                          '🏆 Leaderboard',
+                          style: TextStyle(
+                            color: spaceTextPrimary,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Icon(
+                          expanded
+                              ? Icons.keyboard_arrow_down
+                              : Icons.keyboard_arrow_left,
+                          color: spaceTextSecondary,
+                          size: 16,
+                        ),
                       ],
                     ),
                   ),
@@ -299,22 +402,72 @@ class _LeaderboardOverlayState extends State<LeaderboardOverlay> {
                         return InkWell(
                           onTap: () => _focusUser(state, u.id),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0,
+                              vertical: 6.0,
+                            ),
                             child: Row(
                               children: [
-                                SizedBox(width: 24, child: Text('${i + 1}', style: const TextStyle(color: spaceTextSecondary, fontSize: 11))),
+                                SizedBox(
+                                  width: 24,
+                                  child: Text(
+                                    '${i + 1}',
+                                    style: const TextStyle(
+                                      color: spaceTextSecondary,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                ),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text(u.name, style: const TextStyle(color: spaceTextPrimary, fontSize: 12.5), overflow: TextOverflow.ellipsis),
-                                      Text(getSectorName(u.sector), style: const TextStyle(color: spaceTextSecondary, fontSize: 10.5), overflow: TextOverflow.ellipsis),
+                                      Text(
+                                        u.name,
+                                        style: const TextStyle(
+                                          color: spaceTextPrimary,
+                                          fontSize: 12.5,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        getSectorName(u.sector),
+                                        style: const TextStyle(
+                                          color: spaceTextSecondary,
+                                          fontSize: 10.5,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ],
                                   ),
                                 ),
-                                Text('${u.r.toStringAsFixed(1)}px', style: const TextStyle(color: spaceStar, fontSize: 11.5)),
+                                Text(
+                                  '${u.r.toStringAsFixed(1)}px',
+                                  style: const TextStyle(
+                                    color: spaceStar,
+                                    fontSize: 11.5,
+                                  ),
+                                ),
                                 const SizedBox(width: 8),
-                                Container(width: 6, height: 6, decoration: BoxDecoration(shape: BoxShape.circle, color: u.loggedIn ? spaceOnline : spaceOffline, boxShadow: u.loggedIn ? const [BoxShadow(color: spaceOnline, blurRadius: 4)] : null)),
+                                Container(
+                                  width: 6,
+                                  height: 6,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: u.loggedIn
+                                        ? spaceOnline
+                                        : spaceOffline,
+                                    boxShadow: u.loggedIn
+                                        ? const [
+                                            BoxShadow(
+                                              color: spaceOnline,
+                                              blurRadius: 4,
+                                            ),
+                                          ]
+                                        : null,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -346,11 +499,14 @@ class StarInfoOverlay extends StatelessWidget {
 
     final now = DateTime.now().millisecondsSinceEpoch;
     final jammed = u.lastJamAt > 0 && (now - u.lastJamAt) < 60000;
-    
-    final statusColor = jammed ? spaceDanger : (u.loggedIn ? spaceOnline : spaceOffline);
-    final statusText = (u.loggedIn ? 'online' : 'offline') + (jammed ? ' · jammed' : '');
+
+    final statusColor = jammed
+        ? spaceDanger
+        : (u.loggedIn ? spaceOnline : spaceOffline);
+    final statusText =
+        (u.loggedIn ? 'online' : 'offline') + (jammed ? ' · jammed' : '');
     final isMobile = MediaQuery.of(context).size.width < 600;
-    
+
     return Positioned(
       left: isMobile ? 76 : null,
       right: 16,
@@ -369,13 +525,28 @@ class StarInfoOverlay extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(child: Text(u.name, style: const TextStyle(color: spaceStar, fontSize: 16, letterSpacing: 1.0, fontWeight: FontWeight.w500), overflow: TextOverflow.ellipsis)),
+                    Expanded(
+                      child: Text(
+                        u.name,
+                        style: const TextStyle(
+                          color: spaceStar,
+                          fontSize: 16,
+                          letterSpacing: 1.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                     InkWell(
                       onTap: () {
                         state.selectedUserId = null;
                         state.notifyListeners();
                       },
-                      child: const Icon(Icons.close, color: spaceTextSecondary, size: 16),
+                      child: const Icon(
+                        Icons.close,
+                        color: spaceTextSecondary,
+                        size: 16,
+                      ),
                     ),
                   ],
                 ),
@@ -387,8 +558,11 @@ class StarInfoOverlay extends StatelessWidget {
                 _infoRow('absorbed', '${u.hits}'),
                 _infoRow('size', '${u.r.toStringAsFixed(1)} px'),
                 _infoRow('growth', '+${(u.r - 10.0).toStringAsFixed(1)} px'),
-                _infoRow('position', '${u.x.toStringAsFixed(0)}, ${u.y.toStringAsFixed(0)}'),
-                
+                _infoRow(
+                  'position',
+                  '${u.x.toStringAsFixed(0)}, ${u.y.toStringAsFixed(0)}',
+                ),
+
                 if (u.id == state.sessionUserId) ...[
                   const SizedBox(height: 16),
                   ElevatedButton(
@@ -401,8 +575,9 @@ class StarInfoOverlay extends StatelessWidget {
                     child: Text(u.loggedIn ? 'Go Dark' : 'Go Live'),
                   ),
                 ],
-                
-                if (state.sessionUserId != null && u.id != state.sessionUserId) ...[
+
+                if (state.sessionUserId != null &&
+                    u.id != state.sessionUserId) ...[
                   const SizedBox(height: 8),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -430,8 +605,17 @@ class StarInfoOverlay extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(color: spaceTextSecondary, fontSize: 11.5)),
-          Text(value, style: TextStyle(color: valColor ?? spaceTextPrimary, fontSize: 11.5)),
+          Text(
+            label,
+            style: const TextStyle(color: spaceTextSecondary, fontSize: 11.5),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              color: valColor ?? spaceTextPrimary,
+              fontSize: 11.5,
+            ),
+          ),
         ],
       ),
     );
@@ -456,13 +640,15 @@ class ControlsOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
-    final me = state.sessionUserId != null ? state.getUserById(state.sessionUserId!) : null;
+    final me = state.sessionUserId != null
+        ? state.getUserById(state.sessionUserId!)
+        : null;
 
     final now = DateTime.now().millisecondsSinceEpoch;
     bool isBoosting = false;
     bool canBoost = false;
     int cooldown = 0;
-    
+
     if (me != null && me.loggedIn) {
       final at = me.boostAt;
       if (now - at < 60000) {
@@ -485,13 +671,20 @@ class ControlsOverlay extends StatelessWidget {
               child: FloatingActionButton(
                 mini: true,
                 backgroundColor: isBoosting ? spaceDanger : spaceBg,
-                foregroundColor: isBoosting ? Colors.white : (canBoost ? spaceAccent : spaceTextSecondary),
+                foregroundColor: isBoosting
+                    ? Colors.white
+                    : (canBoost ? spaceAccent : spaceTextSecondary),
                 elevation: 4,
-                onPressed: canBoost ? () => state.api.boost(state.sessionUserId!) : null,
-                child: Text(cooldown > 0 ? fmtClock(cooldown) : '⚡', style: TextStyle(fontSize: cooldown > 0 ? 11 : 22)),
+                onPressed: canBoost
+                    ? () => state.api.boost(state.sessionUserId!)
+                    : null,
+                child: Text(
+                  cooldown > 0 ? fmtClock(cooldown) : '⚡',
+                  style: TextStyle(fontSize: cooldown > 0 ? 11 : 22),
+                ),
               ),
             ),
-          
+
           if (me != null)
             _btn(Icons.my_location, () {
               if (game != null) {
@@ -552,25 +745,35 @@ class _SearchOverlayState extends State<SearchOverlay> {
       setState(() => _results = []);
       return;
     }
-    
+
     q = q.toLowerCase();
     final items = [];
-    
+
     // Sectors
     final n = max(1, (state.users.length / 10).ceil());
     for (int i = 0; i < n; i++) {
       if (getSectorName(i).toLowerCase().contains(q)) {
-        items.add({'kind': 'sector', 'label': getSectorName(i), 'sub': 'sector', 'index': i});
+        items.add({
+          'kind': 'sector',
+          'label': getSectorName(i),
+          'sub': 'sector',
+          'index': i,
+        });
       }
     }
-    
+
     // Stars
     for (final u in state.users) {
       if (u.name.toLowerCase().contains(q)) {
-        items.add({'kind': 'star', 'label': u.name, 'sub': 'star · ${getSectorName(u.sector)}', 'user': u});
+        items.add({
+          'kind': 'star',
+          'label': u.name,
+          'sub': 'star · ${getSectorName(u.sector)}',
+          'user': u,
+        });
       }
     }
-    
+
     setState(() {
       _results = items.take(8).toList();
     });
@@ -602,7 +805,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
     final isMobile = MediaQuery.of(context).size.width < 600;
-    
+
     return Positioned(
       top: isMobile ? (state.sessionUserId != null ? 180 : 130) : 60,
       left: isMobile ? 16 : 244,
@@ -622,8 +825,14 @@ class _SearchOverlayState extends State<SearchOverlay> {
                   hintStyle: const TextStyle(color: spaceTextSecondary),
                   filled: true,
                   fillColor: spaceBg,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
                 style: const TextStyle(color: spaceTextPrimary, fontSize: 13),
               ),
@@ -645,20 +854,48 @@ class _SearchOverlayState extends State<SearchOverlay> {
                       return InkWell(
                         onTap: () => _pick(state, res),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 12.0,
+                          ),
                           child: Row(
                             children: [
                               Container(
-                                width: 8, height: 8,
+                                width: 8,
+                                height: 8,
                                 margin: const EdgeInsets.only(right: 12),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: res['kind'] == 'star' ? spaceStar : spaceAccent,
-                                  boxShadow: [BoxShadow(color: res['kind'] == 'star' ? spaceStar : spaceAccent, blurRadius: 4)],
+                                  color: res['kind'] == 'star'
+                                      ? spaceStar
+                                      : spaceAccent,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: res['kind'] == 'star'
+                                          ? spaceStar
+                                          : spaceAccent,
+                                      blurRadius: 4,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Expanded(child: Text(res['label'], style: const TextStyle(color: spaceTextPrimary, fontSize: 13, fontWeight: FontWeight.w500))),
-                              Text(res['sub'], style: const TextStyle(color: spaceTextSecondary, fontSize: 11)),
+                              Expanded(
+                                child: Text(
+                                  res['label'],
+                                  style: const TextStyle(
+                                    color: spaceTextPrimary,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                res['sub'],
+                                style: const TextStyle(
+                                  color: spaceTextSecondary,
+                                  fontSize: 11,
+                                ),
+                              ),
                             ],
                           ),
                         ),
