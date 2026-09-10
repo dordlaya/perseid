@@ -6,7 +6,7 @@ import 'components/background_component.dart';
 import 'components/star_component.dart';
 import 'components/probe_component.dart';
 
-class SpaceMapGame extends FlameGame with ScaleDetector, ScrollDetector, FPSCounter {
+class SpaceMapGame extends FlameGame with ScaleDetector, ScrollDetector {
   final AppState state;
   
   late final BackgroundComponent background;
